@@ -138,6 +138,7 @@ class TestData(Dataset):
             var_group = []
             offsets_group = []
             for j, character in enumerate(character_group):
+                print(character)
                 file = BVH_file(get_std_bvh(dataset=character))
                 if j == 0:
                     self.joint_topologies.append(file.topology)
@@ -162,31 +163,37 @@ class TestData(Dataset):
             self.var.append(var_group)
             self.offsets.append(offsets_group)
 
-    def __getitem__(self, item):
+    def __getitem__(self, item): #TestData에서 Item을 가져올 때 사용된다
         res = []
         bad_flag = 0
         for i, character_group in enumerate(self.characters):
             res_group = []
             ref_shape = None
-            for j in range(len(character_group)):
+            for j in range(len(character_group)): #characters는 어디에서 오는가?
                 new_motion = self.get_item(i, j, item)
                 if new_motion is not None:
                     new_motion = new_motion.reshape((1, ) + new_motion.shape)
                     new_motion = (new_motion - self.mean[i][j]) / self.var[i][j]
                     ref_shape = new_motion
+                    #print(f"new_motion_shape:{new_motion.shape}")
                 res_group.append(new_motion)
-
+            
+            
             if ref_shape is None:
                 print('Bad at {}'.format(item))
                 return None
             for j in range(len(character_group)):
                 if res_group[j] is None:
+                    print(f"res Bad at {j}")
                     bad_flag = 1
                     res_group[j] = torch.zeros_like(ref_shape)
             if bad_flag:
                 print('Bad at {}'.format(item))
-
+                
+            
+            
             res_group = torch.cat(res_group, dim=0)
+                
             res.append([res_group, list(range(len(character_group)))])
         return res
 
@@ -204,11 +211,15 @@ class TestData(Dataset):
             raise Exception('Wrong input file type')
         if not os.path.exists(file):
             raise Exception('Cannot find file')
+        
         file = BVH_file(file)
         motion = file.to_tensor(quater=self.args.rotation == 'quaternion')
+        #print(f"gid/pid : {gid}/{pid} | motionlength: {len(motion)}")
         motion = motion[:, ::2]
         length = motion.shape[-1]
+        
         length = length // 4 * 4
+        
         return motion[..., :length].to(self.device)
 
     def denorm(self, gid, pid, data):

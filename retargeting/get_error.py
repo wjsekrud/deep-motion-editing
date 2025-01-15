@@ -8,9 +8,9 @@ from datasets.bvh_parser import BVH_file
 import Animation
 
 
-def full_batch(suffix, prefix):
+def full_batch(suffix, prefix, chars):
     res = []
-    chars = ['Mousey_m', 'Goblin_m', 'Mremireh_m', 'Vampire_m']
+    
     for char in chars:
         res.append(batch(char, suffix, prefix))
     return res
@@ -49,8 +49,11 @@ def batch(char, suffix, prefix):
 
         pos = pos[:, index, :]
         pos_ref = pos_ref[:, index, :]
-
-        err = (pos - pos_ref) * (pos - pos_ref)
+        
+        try:
+            err = (pos - pos_ref) * (pos - pos_ref)
+        except:
+            err = 1
         err /= height ** 2
         err = np.mean(err)
         all_err.append(err)

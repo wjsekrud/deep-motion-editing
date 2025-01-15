@@ -1,23 +1,34 @@
-def get_character_names(args):
-    if args.is_train:
-        """
-        Put the name of subdirectory in retargeting/datasets/Mixamo as [[names of group A], [names of group B]]
-        """
-        characters = [['Aj', 'BigVegas', 'Kaya', 'SportyGranny'],
-                      ['Malcolm_m', 'Remy_m', 'Maria_m', 'Jasper_m', 'Knight_m',
-                       'Liam_m', 'ParasiteLStarkie_m', 'Pearl_m', 'Michelle_m', 'LolaB_m',
-                       'Pumpkinhulk_m', 'Ortiz_m', 'Paladin_m', 'James_m', 'Joe_m',
-                       'Olivia_m', 'Yaku_m', 'Timmy_m', 'Racer_m', 'Abe_m']]
 
-    else:
+#Modified
+def get_train_A_characters():
+    with open('./datasets/Mixamo/train_char_A.txt', 'r') as file:
+        names = []
+        for char in file:
+            name = char.strip()
+            names.append(name)
+        return names
+
+def get_train_B_characters():
+    with open('./datasets/Mixamo/train_char_B.txt', 'r') as file:
+        names = []
+        for char in file:
+            name = char.strip()
+            names.append(name)
+        return names
+
+
+def get_character_names(args):
+    
+    characters = [get_train_A_characters(), get_train_B_characters()]
+    '''
+    if not args.is_train:
         """
         To run evaluation successfully, number of characters in both groups must be the same. Repeat is okay.
         """
-        characters = [['BigVegas', 'BigVegas', 'BigVegas', 'BigVegas'],  ['Mousey_m', 'Goblin_m', 'Mremireh_m', 'Vampire_m']]
         tmp = characters[1][args.eval_seq]
         characters[1][args.eval_seq] = characters[1][0]
         characters[1][0] = tmp
-
+    '''
     return characters
 
 
@@ -42,3 +53,4 @@ def get_train_list():
         list = file.readlines()
         list = [f[:-1] for f in list]
         return list
+

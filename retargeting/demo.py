@@ -43,6 +43,6 @@ def example(src_name, dest_name, bvh_name, test_type, output_path):
 
 
 if __name__ == '__main__':
-    example('Aj', 'BigVegas', 'Dancing Running Man.bvh', 'intra', './examples/intra_structure')
-    example('BigVegas', 'Mousey_m', 'Dual Weapon Combo.bvh', 'cross', './examples/cross_structure')
+    example('Mousey', 'Ninja_m', 'armada.bvh', 'intra', './examples/intra_structure')
+    #example('Mousey', 'Ninja_m', 'armada.bvh', 'cross', './examples/cross_structure')
     print('Finished!')
