@@ -44,7 +44,7 @@ if __name__ == '__main__':
     
     cross_error = []
     intra_error = []
-    for i in range(len(characters)):
+    for i in range(len(flat_characters)//2):
         print('Batch [{}/4]'.format(i + 1))
         eval(i, prefix, characters, args.epochs) #reatargeting/eval.py에서 불러와 직접적으로 평가를 하는 부분, batch마다 한 번 호출된다. i 는 eval_seq
         
